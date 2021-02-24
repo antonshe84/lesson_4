@@ -7,9 +7,8 @@
 75.18, 2020-09-05
 """
 
-from datetime import date
 import sys
-from course import *
+from utils.cour import *
 
 
 if __name__ == '__main__':
