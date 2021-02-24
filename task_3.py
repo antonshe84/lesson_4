@@ -14,7 +14,6 @@
 
 import requests
 from datetime import date
-import sys
 
 serv = 'http://www.cbr.ru/scripts/XML_daily.asp'
 
@@ -38,11 +37,12 @@ def currency_rates(val):
 	:param val: валюта
 	:return: [курс в рублях, дата]
 	"""
+
     # Получаем текст запроса
     response = requests.get(serv)
     s = response.text
     # ищем дату по тегу
-    d = find_tag(s, '<ValCurs Date="', '"')  # 21.02.2021
+    d = find_tag(s, '<ValCurs Date="', '"')
     date_return = date(int(d[6:10]), int(d[3:5]), int(d[0:2]))
     # Далее поиск и добавление в словарь всех валют и курсов в рублях
     s = s[s.find('<Valute'):]
