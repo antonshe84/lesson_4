@@ -12,17 +12,51 @@
   использовать в ответе функции?
 """
 
+"""
+<?xml version="1.0" encoding="windows-1251"?><ValCurs Date="21.02.2021" name="Foreign Currency Market"><Valute ID="R01010"><NumCode>036</NumCode><CharCode>AUD</CharCode><Nominal>1</Nominal><Name>Австралийский доллар</Name><Value>58,2249</Value></Valute><Valute ID="R01020A"><NumCode>944</NumCode><CharCode>AZN</CharCode><Nominal>1</Nominal><Name>Азербайджанский манат</Name><Value>43,5196</Value></Valute>
+"""
+
+
+
 import requests
 import requests.utils as utils
 
-payload = {'key1': 'CharCode', 'key2': 'Value'}
+valute_course = {}
+
+def find_tag(st, tag1, tag2):
+	t1 = st.find(tag1)
+	t2 = st.find(tag2)
+	print(t1)
+	print(t2)
+	if t1 == -1 or t2 == -1:
+		return None
+	tag_text = st[t1+len(tag1):t2]
+	if tag_text:
+		return tag_text
+	else:
+		return None
+
+
 response = requests.get('http://www.cbr.ru/scripts/XML_daily.asp')
 encodings = utils.get_encoding_from_headers(response.headers)
-print(response.text)
-print(response.text.find('<Valute'))
-print(response.text.find('</Valute'))
-print(response.text[response.text.find('<Valute')+7:response.text.find('</Valute')-8])
+print(type(response.content))
+s = response.text
+print(s.find('<Valute'))
+print(s.find('</Valute'))
+print(s[s.find('<Valute')+7:s.find('</Valute')])
+print(s)
+valute = find_tag(s, '<Valute',  '</Valute>')
+while valute:
 
-encodings = utils.get_encoding_from_headers(response.headers)
-content = response.content.decode(encoding=encodings)
-print(content)
+	print(valute)
+	valute_course[find_tag(valute, '<CharCode>', '</CharCode>')] = find_tag(valute, '<Value>', '</Value>')
+	s = s[len(valute)+9:]
+	print(s)
+	valute = find_tag(s, '<Valute',  '</Valute>')
+	print(valute)
+	
+print(valute_course)
+
+# encodings = utils.get_encoding_from_headers(response.headers)
+# content = response.content.decode(encoding=encodings)
+# print(content)
